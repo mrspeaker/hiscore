@@ -1,6 +1,7 @@
 import { Game, User, Score, DataTypes } from "./Models";
 import { getGameScores } from "./database";
 import { useEffect, useState } from "react";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { PlusIcon } from "@heroicons/react/outline";
 
 function ScoreTable({ handleModal, game }: { handleModal: any; game: Game }) {
@@ -9,11 +10,11 @@ function ScoreTable({ handleModal, game }: { handleModal: any; game: Game }) {
     short: "",
     game: game.name,
     score: 0,
-    date: "",
+    date: ""
   };
   const [scores, setScores] = useState([defaultScore]);
   useEffect(() => {
-    getGameScores(game).then((res) => {
+    getGameScores(game).then(res => {
       setScores(res);
     });
   }, [game]);
@@ -50,7 +51,7 @@ function ScoreTable({ handleModal, game }: { handleModal: any; game: Game }) {
           onClick={postNewScore}
         >
           New score
-          <PlusIcon className="ml-2 h-4 w-4 inline"/>
+          <PlusIcon className="ml-2 h-4 w-4 inline" />
         </button>
       </div>
       <table className="table-auto border-collapse min-w-full">
@@ -61,27 +62,32 @@ function ScoreTable({ handleModal, game }: { handleModal: any; game: Game }) {
             <th className="bg-slate-600">Date</th>
           </tr>
         </thead>
-        <tbody className="bg-zinc-100 text-indigo-900">
-          {scores.slice(0, 5).map((score) => {
+        <TransitionGroup
+          component="tbody"
+          className="bg-zinc-100 text-indigo-900"
+        >
+          {scores.slice(0, 5).map((score, i) => {
             return (
-              <tr key={scores.indexOf(score)} className="border-b">
-                <td className="px-2 text-left py-1">
-                  <div className="font-bold">{score.short}</div>
-                  <div className="text-xs italic text-gray-400">
-                    {score.player}
-                  </div>
-                </td>
-                <td className="px-2 text-right"> {score.score} </td>
-                <td className="px-2 text-right">
-                  <div className="text-sm">{formatDate(score.date)}</div>
-                  <div className="text-xs text-gray-500">
-                    {formatTime(score.date)}
-                  </div>
-                </td>
-              </tr>
+              <CSSTransition key={score} timeout={500}>
+                <tr classNames="border-b">
+                  <td className="px-2 text-left py-1">
+                    <div className="font-bold">{score.short}</div>
+                    <div className="text-xs italic text-gray-400">
+                      {score.player}
+                    </div>
+                  </td>
+                  <td className="px-2 text-right"> {score.score} </td>
+                  <td className="px-2 text-right">
+                    <div className="text-sm">{formatDate(score.date)}</div>
+                    <div className="text-xs text-gray-500">
+                      {formatTime(score.date)}
+                    </div>
+                  </td>
+                </tr>
+              </CSSTransition>
             );
           })}
-        </tbody>
+        </TransitionGroup>
       </table>
     </div>
   );

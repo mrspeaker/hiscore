@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import Modal from "./components/Modal";
 import ScoreTable from "./ScoreTable";
 import "./App.css";
@@ -125,6 +126,7 @@ function App() {
         if (score.playerId === -1) {
           return Promise.reject("Unknown Player");
         }
+        console.log("here we go...", score);
         addScore(score)
           .then(() => {
             return getGames();
